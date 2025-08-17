@@ -44,3 +44,16 @@ def get_pull_requests_count(full_name):
             if pr.get("merged_at"):
                 count += 1
     return count
+
+# Função para issues abertas e fechadas
+def get_issues_stats(full_name):
+    owner, repo = full_name.split("/")
+    url_closed = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}+type:issue+state:closed"
+    url_total = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}+type:issue"
+    r_closed = requests.get(url_closed, headers=HEADERS)
+    r_total = requests.get(url_total, headers=HEADERS)
+    if r_closed.status_code == 200 and r_total.status_code == 200:
+        closed = r_closed.json()["total_count"]
+        total = r_total.json()["total_count"]
+        return closed, total
+    return None, None
