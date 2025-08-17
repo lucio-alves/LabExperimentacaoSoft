@@ -32,3 +32,15 @@ def get_releases_count(full_name):
     if r.status_code == 200:
         return len(r.json())
     return None
+
+# Função para contar pull requests aceitos (merged)
+def get_pull_requests_count(full_name):
+    url = f"https://api.github.com/repos/{full_name}/pulls?state=closed&per_page=100"
+    r = requests.get(url, headers=HEADERS)
+    count = 0
+    if r.status_code == 200:
+        prs = r.json()
+        for pr in prs:
+            if pr.get("merged_at"):
+                count += 1
+    return count
