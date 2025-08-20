@@ -149,6 +149,56 @@ def process_repositories(repos_raw):
     return pd.DataFrame(data)
 
 
+def collect_and_export_data():
+    print("1000 repositórios mais estrelados do GitHub...")
+    repos = fetch_top_repositories()
+
+    data = []
+
+    for repo in tqdm(repos, desc="Coletando métricas das RQs"):
+        name = repo["full_name"]
+        created = repo["created_at"]       
+        updated = repo["updated_at"]       
+        language = repo["language"] if repo["language"] else "Unknown"
+
+        # RQ03: Total de releases
+        releases = get_releases_count(name)
+        time.sleep(1)
+
+        # RQ02: Pull requests aceitas
+        pull_requests = get_pull_requests_count(name)
+        time.sleep(1)
+
+        # RQ06: Issues fechadas vs total
+        closed_issues, total_issues = get_issues_stats(name)
+        time.sleep(2)
+
+        # Calcular razão de issues 
+        issues_closed_ratio = None
+        if total_issues and total_issues > 0:
+            issues_closed_ratio = closed_issues / total_issues
+
+        repo_data = {
+            "Repositorio": name,
+            "Linguagem Principal": language,
+            "Data de criaçao": created,               
+            "Data ultimo update": updated, 
+            "PRs aceitos": pull_requests,
+            "Total de releases": releases,
+            "Issue Fechadas": issues_closed_ratio
+        }
+
+        data.append(repo_data)
+
+    # Criar DataFrame e exportar CSV
+    df = pd.DataFrame(data)
+    df.to_csv('metricas_rqs_github.csv', index=False, encoding='utf-8')
+    print("\nMétricas das RQs exportadas para 'metricas_rqs_github.csv'")
+    print(f"Total de repositórios processados: {len(df)}")
+
+    return df
+
+
 # MAIN
 if __name__ == "__main__":
     print("\n Métricas:\n")
