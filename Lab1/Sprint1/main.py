@@ -6,7 +6,7 @@ from datetime import datetime
 import re
 
 # Insira seu token do GitHub aqui
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = ""
 
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}"
