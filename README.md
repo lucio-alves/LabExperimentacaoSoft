@@ -1,2 +1,3 @@
 # LabExperimentacaoSoft
-Laboratório de experimentação de Software.
+Relatório:
+https://www.overleaf.com/read/xwgwsbmyckqv#cf7955
